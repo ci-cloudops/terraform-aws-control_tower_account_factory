@@ -13,6 +13,12 @@ resource "aws_codestarconnections_connection" "github" {
   provider_type = "GitHub"
 }
 
+resource "aws_codestarconnections_connection" "gitlab" {
+  count         = local.vcs.is_gitlab ? 1 : 0
+  name          = "ct-aft-gitlab-connection"
+  provider_type = "GitLab"
+}
+
 resource "aws_codestarconnections_connection" "githubenterprise" {
   count    = local.vcs.is_github_enterprise ? 1 : 0
   name     = "ct-aft-github-ent-connection"

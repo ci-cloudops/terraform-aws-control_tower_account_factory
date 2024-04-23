@@ -76,25 +76,29 @@ resource "aws_subnet" "aft_vpc_public_subnet_02" {
 resource "aws_route_table" "aft_vpc_private_subnet_01" {
   count  = var.aft_enable_vpc ? 1 : 0
   vpc_id = aws_vpc.aft_vpc[0].id
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.aft-vpc-natgw-01[0].id
-  }
   tags = {
     Name = "aft-vpc-private-subnet-01"
   }
 }
 
+resource "aws_route" "nat_gw_01" {
+  route_table_id = aws_route_table.aft_vpc_private_subnet_01.id
+  destination_cidr_block = "0.0.0.0/8"
+  nat_gateway_id = aws_nat_gateway.aft-vpc-natgw-01[0].id
+}
+
 resource "aws_route_table" "aft_vpc_private_subnet_02" {
   count  = var.aft_enable_vpc ? 1 : 0
   vpc_id = aws_vpc.aft_vpc[0].id
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.aft-vpc-natgw-02[0].id
-  }
   tags = {
     Name = "aft-vpc-private-subnet-02"
   }
+}
+
+resource "aws_route" "nat_gw_02" {
+  route_table_id = aws_route_table.aft_vpc_private_subnet_02.id
+  destination_cidr_block = "0.0.0.0/8"
+  nat_gateway_id = aws_nat_gateway.aft-vpc-natgw-02[0].id
 }
 
 resource "aws_route_table" "aft_vpc_public_subnet_01" {
